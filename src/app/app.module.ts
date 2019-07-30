@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { OfficeTimeComponent } from './employee-center/office-time/office-time.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    OfficeTimeComponent
   ],
   imports: [
     BrowserModule,
