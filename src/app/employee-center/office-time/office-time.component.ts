@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { timeValidator } from '../../shared/validators/timeValidator';
 import { NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
-import { MY_PICKER_CONFIG } from '../../shared/constants/picker-constants';
+import { MY_PICKER_CONFIG, VALID_TIMES } from '../../shared/constants/picker-constants';
 
 @Component({
   selector: 'app-office-time',
@@ -14,20 +14,16 @@ export class OfficeTimeComponent implements OnInit {
   officeTimeForm: FormGroup;
 
   // private variables can be mapped from a constants file to declutter this component
-
   private officeFromTime: string;
   private officeToTime: string;
   // currently fixed fot hours only can be updated to use mins and secs as well
   private officeHours: number;
-  // for validations - Office Start Time - implemented for start hours
-  private minStartTime = 8;
-  private maxStartTime = 11;
 
   // NgbTimepickerConfig service to load configuartions from MY_PICKER_CONFIG
   constructor(private fb: FormBuilder,
     private config: NgbTimepickerConfig) {
     // ISSUE: direct object to object assignment was updating internal values but was not reflecting on UI
-    // also this assignment doesnt work in ngOnInit,
+    // also this assignment does not work in ngOnInit,
     const props = Object.getOwnPropertyNames(config);
     props.forEach(property => {
       config[property] = MY_PICKER_CONFIG[property];
@@ -37,13 +33,13 @@ export class OfficeTimeComponent implements OnInit {
   ngOnInit() {
     this.officeTimeForm = this.officeTimeInit();
     this.initializePickers();
-    this.config.meridian = false; // this is not work here ?? afterviewinit fails as well
+    this.config.meridian = false; // this does not work here ?? afterviewinit fails as well
   }
 
   officeTimeInit(): FormGroup {
     return this.fb.group({
-      fromTime: ['', timeValidator(this.minStartTime, this.maxStartTime)],
-      toTime: [''],
+      fromTime: ['', timeValidator(VALID_TIMES.minStartTime, VALID_TIMES.maxStartTime)],
+      toTime: ['', timeValidator(VALID_TIMES.minEndTime, VALID_TIMES.maxEndTime)],
     });
   }
 

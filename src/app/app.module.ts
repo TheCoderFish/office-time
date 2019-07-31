@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { NgbTimepickerConfig, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTimepickerModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { OfficeTimeComponent } from './employee-center/office-time/office-time.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -14,9 +14,9 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    NgbTimepickerModule.forRoot()
+    NgbTimepickerModule.forRoot(),
+    NgbAlertModule.forRoot()
   ],
-  providers: [NgbTimepickerConfig],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

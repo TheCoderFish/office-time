@@ -1,4 +1,4 @@
-import { FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
+import { ValidatorFn, AbstractControl } from '@angular/forms';
 
 export function timeValidator(min: number, max: number): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -9,12 +9,8 @@ export function timeValidator(min: number, max: number): ValidatorFn {
             return null;
         }
 
-        if (value.hour < min) {
-            return { tooEarly: true };
-        }
-
-        if (value.hour > max) {
-            return { tooLate: true };
+        if (value.hour < min || value.hour > max) {
+            return { invalidHours: true };
         }
         return null;
     };
