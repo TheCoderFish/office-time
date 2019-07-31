@@ -7,7 +7,7 @@
                 <ngb-timepicker formControlName="fromTime"></ngb-timepicker>
                 <div *ngIf="fromTime.hasError('tooEarly')">early</div>
             </div>
-            <div class="col-sm-1"></div>
+            <div class="col-sm-1 spacer"></div>
             <div class="col-sm-4">
                 <h3>To Time</h3>
                 <ngb-timepicker formControlName="toTime"></ngb-timepicker>
@@ -16,26 +16,20 @@
         <div class="row mt-3 error-area">
             <div class="col-sm-3 col-md-8">
                 <div *ngIf="fromTime.hasError('invalidHours')">
-                    <p>
                         <ngb-alert [dismissible]="false" class="text-center">
                             <strong>Warning!</strong>These are Invalid Office Hours. Valid From Time 09:00 AM to 11:00
                             AM
                         </ngb-alert>
-                    </p>
                 </div>
                 <div *ngIf="toTime.hasError('invalidHours')">
-                    <p>
                         <ngb-alert [dismissible]="false" class="text-center">
                             <strong>Warning!</strong>These are Invalid Office Hours. Valid To Time 08:00 PM to 10:00 PM
                         </ngb-alert>
-                    </p>
                 </div>
                 <div *ngIf="toTime.hasError('lessThanFrom')">
-                    <p>
                         <ngb-alert [dismissible]="false" class="text-center" [type]="'danger'">
                             <strong>Warning!</strong>To Time Cannot Be Less Than From Time
                         </ngb-alert>
-                    </p>
                 </div>
             </div>
         </div>

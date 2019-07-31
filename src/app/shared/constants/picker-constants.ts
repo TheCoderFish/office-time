@@ -17,3 +17,9 @@ export const VALID_TIMES = {
     minEndTime: 20,
     maxEndTime: 21
 };
+
+export const INPUT = {
+    officeFromTime: '10:00',
+    officeToTime: '20:00',
+    officeHours: 10
+}
