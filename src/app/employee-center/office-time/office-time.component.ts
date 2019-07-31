@@ -2,11 +2,24 @@ import { Component, OnInit, OnChanges, ViewChildren, QueryList, DoCheck, AfterVi
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { NgbTimepicker } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker';
 import { minimumTimeValidator } from '../../shared/validators/minimumTimeValidator';
+import { NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+
+const myPickerConfig = {
+  meridian: true,
+  spinners: true,
+  seconds: false,
+  hourStep: 1,
+  minuteStep: 15,
+  secondStep: 1,
+  disabled: false,
+  readonlyInputs: false,
+  size: 'small'
+};
 
 @Component({
   selector: 'app-office-time',
   templateUrl: './office-time.component.html',
-  styleUrls: ['./office-time.component.scss']
+  styleUrls: ['./office-time.component.scss'],
 })
 export class OfficeTimeComponent implements OnInit, DoCheck, AfterViewChecked {
 
@@ -23,7 +36,12 @@ export class OfficeTimeComponent implements OnInit, DoCheck, AfterViewChecked {
   // currently fixed fot hours only can be updated to use mins and secs as well
   private officeHours: number;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private config: NgbTimepickerConfig) {
+    const props = Object.getOwnPropertyNames(config);
+    props.forEach(property => {
+      config[property] = myPickerConfig[property]
+    });
   }
 
   ngOnInit() {
