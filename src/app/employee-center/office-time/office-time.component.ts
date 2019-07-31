@@ -2,18 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { timeValidator } from '../../shared/validators/timeValidator';
 import { NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
-
-const MY_PICKER_CONFIG = {
-  meridian: true,
-  spinners: true,
-  seconds: false,
-  hourStep: 1,
-  minuteStep: 15,
-  secondStep: 1,
-  disabled: false,
-  readonlyInputs: false,
-  size: 'small'
-};
+import { MY_PICKER_CONFIG } from '../../shared/constants/picker-constants';
 
 @Component({
   selector: 'app-office-time',
@@ -24,29 +13,31 @@ export class OfficeTimeComponent implements OnInit {
 
   officeTimeForm: FormGroup;
 
+  // private variables can be mapped from a constants file to declutter this component
+
   private officeFromTime: string;
   private officeToTime: string;
   // currently fixed fot hours only can be updated to use mins and secs as well
   private officeHours: number;
-  // for validations - Office Start Time
+  // for validations - Office Start Time - implemented for start hours
   private minStartTime = 8;
   private maxStartTime = 11;
 
+  // NgbTimepickerConfig service to load configuartions from MY_PICKER_CONFIG
   constructor(private fb: FormBuilder,
-              private config: NgbTimepickerConfig) {
+    private config: NgbTimepickerConfig) {
+    // ISSUE: direct object to object assignment was updating internal values but was not reflecting on UI
+    // also this assignment doesnt work in ngOnInit,
     const props = Object.getOwnPropertyNames(config);
     props.forEach(property => {
-      config[property] = MY_PICKER_CONFIG[property]
+      config[property] = MY_PICKER_CONFIG[property];
     });
   }
 
   ngOnInit() {
     this.officeTimeForm = this.officeTimeInit();
-    this.officeFromTime = '10:00';
-    this.setTime(this.officeFromTime, this.fromTime);
-    this.officeHours = 10;
-    this.officeToTime = this.getToTime();
-    this.setTime(this.officeToTime, this.toTime);
+    this.initializePickers();
+    this.config.meridian = false; // this is not work here ?? afterviewinit fails as well
   }
 
   officeTimeInit(): FormGroup {
@@ -56,6 +47,7 @@ export class OfficeTimeComponent implements OnInit {
     });
   }
 
+  // Getters
   get fromTime() {
     return this.officeTimeForm.get('fromTime') as FormControl;
   }
@@ -64,25 +56,26 @@ export class OfficeTimeComponent implements OnInit {
     return this.officeTimeForm.get('toTime') as FormControl;
   }
 
+  initializePickers() {
+    this.officeFromTime = '10:00';
+    this.setTime(this.officeFromTime, this.fromTime);
+    this.officeHours = 10;
+    this.officeToTime = this.getToTime();
+    this.setTime(this.officeToTime, this.toTime);
+  }
+
   onSubmit() {
     console.log(this.officeTimeForm.value);
   }
 
+
+  // For Time Calculations
   private setTime(input: string, control: FormControl) {
     const hours = this.getHourFromTime(input);
     const minutes = this.getMinuteFromTime(input);
     control.patchValue({
       hour: hours,
       minute: minutes
-    });
-  }
-
-  private disableSpinner() {
-    this.fromTime.valueChanges.subscribe(x => {
-      console.log(this.fromTime.errors);
-      if (this.fromTime.hasError('tooEarly')) {
-        console.log('done');
-      }
     });
   }
 
@@ -97,6 +90,15 @@ export class OfficeTimeComponent implements OnInit {
 
   private getMinuteFromTime(input: string) {
     return parseInt(input.split(':')[1], 10);
+  }
+
+  private disableSpinner() {
+    this.fromTime.valueChanges.subscribe(x => {
+      console.log(this.fromTime.errors);
+      if (this.fromTime.hasError('tooEarly')) {
+        console.log('done');
+      }
+    });
   }
 
 }
