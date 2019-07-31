@@ -14,7 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    NgbTimepickerModule
+    NgbTimepickerModule.forRoot()
   ],
   providers: [
     NgbTimepickerConfig
