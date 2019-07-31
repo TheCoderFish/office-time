@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { minimumTimeValidator } from '../../shared/validators/minimumTimeValidator';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { timeValidator } from '../../shared/validators/timeValidator';
 import { NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
-import { MY_PICKER_CONFIG, TIME_CONSTANTS, getHourFromTime, getMinuteFromTime, getToTime } from '../../shared/constants/timerConstants';
 
-
+const MY_PICKER_CONFIG = {
+  meridian: true,
+  spinners: true,
+  seconds: false,
+  hourStep: 1,
+  minuteStep: 15,
+  secondStep: 1,
+  disabled: false,
+  readonlyInputs: false,
+  size: 'small'
+};
 
 @Component({
   selector: 'app-office-time',
@@ -16,8 +24,16 @@ export class OfficeTimeComponent implements OnInit {
 
   officeTimeForm: FormGroup;
 
+  private officeFromTime: string;
+  private officeToTime: string;
+  // currently fixed fot hours only can be updated to use mins and secs as well
+  private officeHours: number;
+  // for validations - Office Start Time
+  private minStartTime = 8;
+  private maxStartTime = 11;
+
   constructor(private fb: FormBuilder,
-    private config: NgbTimepickerConfig) {
+              private config: NgbTimepickerConfig) {
     const props = Object.getOwnPropertyNames(config);
     props.forEach(property => {
       config[property] = MY_PICKER_CONFIG[property]
@@ -26,15 +42,16 @@ export class OfficeTimeComponent implements OnInit {
 
   ngOnInit() {
     this.officeTimeForm = this.officeTimeInit();
-    this.setTime(TIME_CONSTANTS.officeFromTime, this.fromTime);
-    this.setTime(TIME_CONSTANTS.officeToTime, this.toTime);
-    this.disableSpinner();
+    this.officeFromTime = '10:00';
+    this.setTime(this.officeFromTime, this.fromTime);
+    this.officeHours = 10;
+    this.officeToTime = this.getToTime();
+    this.setTime(this.officeToTime, this.toTime);
   }
-
 
   officeTimeInit(): FormGroup {
     return this.fb.group({
-      fromTime: ['', timeValidator(8, 20)],
+      fromTime: ['', timeValidator(this.minStartTime, this.maxStartTime)],
       toTime: [''],
     });
   }
@@ -52,8 +69,8 @@ export class OfficeTimeComponent implements OnInit {
   }
 
   private setTime(input: string, control: FormControl) {
-    const hours = getHourFromTime(input);
-    const minutes = getMinuteFromTime(input);
+    const hours = this.getHourFromTime(input);
+    const minutes = this.getMinuteFromTime(input);
     control.patchValue({
       hour: hours,
       minute: minutes
@@ -69,5 +86,17 @@ export class OfficeTimeComponent implements OnInit {
     });
   }
 
+  private getToTime() {
+    return `${this.getHourFromTime(this.officeFromTime) + this.officeHours} :
+    ${this.getMinuteFromTime(this.officeFromTime)}`;
+  }
+
+  private getHourFromTime(input: string) {
+    return parseInt(input.split(':')[0], 10);
+  }
+
+  private getMinuteFromTime(input: string) {
+    return parseInt(input.split(':')[1], 10);
+  }
 
 }
