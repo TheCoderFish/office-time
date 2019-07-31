@@ -1,69 +1,40 @@
-import { Component, OnInit, OnChanges, ViewChildren, QueryList, DoCheck, AfterViewChecked } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { NgbTimepicker } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { minimumTimeValidator } from '../../shared/validators/minimumTimeValidator';
+import { timeValidator } from '../../shared/validators/timeValidator';
 import { NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+import { MY_PICKER_CONFIG, TIME_CONSTANTS, getHourFromTime, getMinuteFromTime, getToTime } from '../../shared/constants/timerConstants';
 
-const myPickerConfig = {
-  meridian: true,
-  spinners: true,
-  seconds: false,
-  hourStep: 1,
-  minuteStep: 15,
-  secondStep: 1,
-  disabled: false,
-  readonlyInputs: false,
-  size: 'small'
-};
+
 
 @Component({
   selector: 'app-office-time',
   templateUrl: './office-time.component.html',
   styleUrls: ['./office-time.component.scss'],
 })
-export class OfficeTimeComponent implements OnInit, DoCheck, AfterViewChecked {
+export class OfficeTimeComponent implements OnInit {
 
   officeTimeForm: FormGroup;
-  fromTimeComponent: NgbTimepicker;
-  toTimeComponent: NgbTimepicker;
-
-  @ViewChildren(NgbTimepicker)
-  pickers: QueryList<NgbTimepicker>;
-
-  private officeFromTime: string;
-  private officeToTime: string;
-
-  // currently fixed fot hours only can be updated to use mins and secs as well
-  private officeHours: number;
 
   constructor(private fb: FormBuilder,
-              private config: NgbTimepickerConfig) {
+    private config: NgbTimepickerConfig) {
     const props = Object.getOwnPropertyNames(config);
     props.forEach(property => {
-      config[property] = myPickerConfig[property]
+      config[property] = MY_PICKER_CONFIG[property]
     });
   }
 
   ngOnInit() {
     this.officeTimeForm = this.officeTimeInit();
-    this.officeFromTime = '08:00';
-    this.setTime(this.officeFromTime, this.fromTime);
-    this.officeHours = 10;
-    this.officeToTime = this.getToTime();
-    this.setTime(this.officeToTime, this.toTime);
+    this.setTime(TIME_CONSTANTS.officeFromTime, this.fromTime);
+    this.setTime(TIME_CONSTANTS.officeToTime, this.toTime);
+    this.disableSpinner();
   }
 
-  ngDoCheck(): void {
-  }
-
-  ngAfterViewChecked(): void {
-    this.fromTimeComponent = this.pickers.first;
-    this.toTimeComponent = this.pickers.last;
-  }
 
   officeTimeInit(): FormGroup {
     return this.fb.group({
-      fromTime: ['', minimumTimeValidator],
+      fromTime: ['', timeValidator(8, 20)],
       toTime: [''],
     });
   }
@@ -81,24 +52,21 @@ export class OfficeTimeComponent implements OnInit, DoCheck, AfterViewChecked {
   }
 
   private setTime(input: string, control: FormControl) {
-    const hours = this.getHourFromTime(input);
-    const minutes = this.getMinuteFromTime(input);
+    const hours = getHourFromTime(input);
+    const minutes = getMinuteFromTime(input);
     control.patchValue({
       hour: hours,
       minute: minutes
     });
   }
 
-  private getHourFromTime(input: string) {
-    return parseInt(input.split(':')[0], 10);
-  }
-
-  private getMinuteFromTime(input: string) {
-    return parseInt(input.split(':')[1], 10);
-  }
-
-  private getToTime() {
-    return `${this.getHourFromTime(this.officeFromTime) + this.officeHours} : ${this.getMinuteFromTime(this.officeFromTime)}`;
+  private disableSpinner() {
+    this.fromTime.valueChanges.subscribe(x => {
+      console.log(this.fromTime.errors);
+      if (this.fromTime.hasError('tooEarly')) {
+        console.log('done');
+      }
+    });
   }
 
 

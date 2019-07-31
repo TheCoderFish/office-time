@@ -1,8 +1,6 @@
 import { FormControl } from '@angular/forms';
 
 export function minimumTimeValidator(control: FormControl) {
-    const minStartTime = 8;
-    const minEndTime = '08:00';
     const value = control.value;
 
     if (!value) {
