@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-3">
     <form [formGroup]="officeTimeForm" (ngSubmit)="onSubmit()">
         <h1>Office Timings</h1>
         <div class="row mt-5">
@@ -18,7 +18,8 @@
                 <div *ngIf="fromTime.hasError('invalidHours')">
                     <p>
                         <ngb-alert [dismissible]="false" class="text-center">
-                            <strong>Warning!</strong>These are Invalid Office Hours. Valid From Time 09:00 AM to 11:00 AM
+                            <strong>Warning!</strong>These are Invalid Office Hours. Valid From Time 09:00 AM to 11:00
+                            AM
                         </ngb-alert>
                     </p>
                 </div>
@@ -26,6 +27,13 @@
                     <p>
                         <ngb-alert [dismissible]="false" class="text-center">
                             <strong>Warning!</strong>These are Invalid Office Hours. Valid To Time 08:00 PM to 10:00 PM
+                        </ngb-alert>
+                    </p>
+                </div>
+                <div *ngIf="toTime.hasError('lessThanFrom')">
+                    <p>
+                        <ngb-alert [dismissible]="false" class="text-center" [type]="'danger'">
+                            <strong>Warning!</strong>To Time Cannot Be Less Than From Time
                         </ngb-alert>
                     </p>
                 </div>

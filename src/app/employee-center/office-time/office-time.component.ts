@@ -58,6 +58,7 @@ export class OfficeTimeComponent implements OnInit {
     this.officeHours = 10;
     this.officeToTime = this.getToTime();
     this.setTime(this.officeToTime, this.toTime);
+    this.checkLessThan();
   }
 
   onSubmit() {
@@ -88,11 +89,10 @@ export class OfficeTimeComponent implements OnInit {
     return parseInt(input.split(':')[1], 10);
   }
 
-  private disableSpinner() {
-    this.fromTime.valueChanges.subscribe(x => {
-      console.log(this.fromTime.errors);
-      if (this.fromTime.hasError('tooEarly')) {
-        console.log('done');
+  private checkLessThan() {
+    this.toTime.valueChanges.subscribe(toTime => {
+      if (toTime.hour < this.fromTime.value.hour) {
+        this.toTime.setErrors({ lessThanFrom: true });
       }
     });
   }
