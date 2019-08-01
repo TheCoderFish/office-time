@@ -1,6 +1,6 @@
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 
-export function timeValidator(min: number, max: number): ValidatorFn {
+export function timeValidator({ min, max }): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
 
         const value = control.value;

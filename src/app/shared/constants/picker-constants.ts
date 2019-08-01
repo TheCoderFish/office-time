@@ -12,10 +12,14 @@ export const MY_PICKER_CONFIG = {
 
 
 export const VALID_TIMES = {
-    minStartTime: 9,
-    maxStartTime: 10,
-    minEndTime: 20,
-    maxEndTime: 21
+    starTime: {
+        min: 9,
+        max: 10,
+    },
+    endTime: {
+        min: 20,
+        max: 21
+    }
 };
 
 export const INPUT = {
