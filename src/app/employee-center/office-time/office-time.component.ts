@@ -19,8 +19,7 @@ export class OfficeTimeComponent implements OnInit {
     private config: NgbTimepickerConfig) {
     // ISSUE: direct object to object assignment was updating internal values but was not reflecting on UI
     // also the assignment done below does not work in ngOnInit
-    const props = Object.getOwnPropertyNames(config);
-    props.forEach(property => {
+    Object.getOwnPropertyNames(config).forEach(property => {
       config[property] = MY_PICKER_CONFIG[property];
     });
   }
@@ -28,13 +27,16 @@ export class OfficeTimeComponent implements OnInit {
   ngOnInit() {
     this.officeTimeForm = this.officeTimeInit();
     this.initializePickers();
-    this.config.meridian = false; // this does not work here ?? afterviewinit fails as well
+    /*
+    this does not work here ?? afterviewinit fails as well
+    this.config.meridian = false;
+    */
   }
 
   officeTimeInit(): FormGroup {
     return this.fb.group({
-      fromTime: ['', timeValidator(VALID_TIMES.minStartTime, VALID_TIMES.maxStartTime)],
-      toTime: ['', timeValidator(VALID_TIMES.minEndTime, VALID_TIMES.maxEndTime)],
+      fromTime: ['', timeValidator(VALID_TIMES.starTime)],
+      toTime: ['', timeValidator(VALID_TIMES.endTime)],
     });
   }
 
@@ -60,8 +62,8 @@ export class OfficeTimeComponent implements OnInit {
 
   // optional functionality to calculate toTime using fromTime + officeHours
   private calcToTime() {
-    return `${this.getHoursMinutes(INPUT.officeFromTime).hour + INPUT.officeHours} :
-    ${this.getHoursMinutes(INPUT.officeFromTime).minute}`;
+    const time = this.getHoursMinutes(INPUT.officeFromTime);
+    return `${time.hour + INPUT.officeHours} : ${time.minute}`;
   }
 
   // for input "08 : 00" returns { hour : 8, minute: 0}
