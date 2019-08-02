@@ -1,0 +1,19 @@
+.submit-btn{
+    width: 500px;
+}
+.alert{
+    margin: 0 25px !important;
+}
+.form-width
+{
+    width: 500px;
+}
+@media (max-width:576px){
+    .submit-btn{
+        width: 220px !important;
+    }
+    .form-width
+{
+    width: 220px;
+}
+}
