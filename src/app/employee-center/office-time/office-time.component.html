@@ -1,4 +1,5 @@
-<div class="container mt-3">
+<div class="container">
+    <h5 class="bg-secondary rounded p-2 mt-2 text-light">Time-Picker</h5>
     <form [formGroup]="officeTimeForm" (ngSubmit)="onSubmit()">
         <h1>Office Timings</h1>
         <div class="row mt-5">
@@ -16,20 +17,20 @@
         <div class="row mt-3 error-area">
             <div class="col-sm-3 col-md-8">
                 <div *ngIf="fromTime.hasError('invalidHours')">
-                        <ngb-alert [dismissible]="false" class="text-center">
-                            <strong>Warning!</strong>These are Invalid Office Hours. Valid From Time 09:00 AM to 11:00
-                            AM
-                        </ngb-alert>
+                    <ngb-alert [dismissible]="false" class="text-center">
+                        <strong>Warning!</strong>These are Invalid Office Hours. Valid From Time 09:00 AM to 11:00
+                        AM
+                    </ngb-alert>
                 </div>
                 <div *ngIf="toTime.hasError('invalidHours')">
-                        <ngb-alert [dismissible]="false" class="text-center">
-                            <strong>Warning!</strong>These are Invalid Office Hours. Valid To Time 08:00 PM to 10:00 PM
-                        </ngb-alert>
+                    <ngb-alert [dismissible]="false" class="text-center">
+                        <strong>Warning!</strong>These are Invalid Office Hours. Valid To Time 08:00 PM to 10:00 PM
+                    </ngb-alert>
                 </div>
                 <div *ngIf="toTime.hasError('lessThanFrom')">
-                        <ngb-alert [dismissible]="false" class="text-center" [type]="'danger'">
-                            <strong>Warning!</strong>To Time Cannot Be Less Than From Time
-                        </ngb-alert>
+                    <ngb-alert [dismissible]="false" class="text-center" [type]="'danger'">
+                        <strong>Warning!</strong>To Time Cannot Be Less Than From Time
+                    </ngb-alert>
                 </div>
             </div>
         </div>
